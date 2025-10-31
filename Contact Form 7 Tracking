@@ -16,3 +16,4 @@ document.addEventListener('wpcf7submit', function (event) {
     inputs: inputs,
   });
 }, false);
+g
