@@ -1,0 +1,35 @@
+<script>
+(function(){
+
+    if (!document.querySelector('.wpforms-container')) return;
+
+    var observer = new MutationObserver(function(m){
+        m.forEach(function(x){
+            if (!x.addedNodes) return;
+
+            for (var i = 0; i < x.addedNodes.length; i++) {
+                var n = x.addedNodes[i];
+                if (n.nodeType !== 1) continue;
+
+                var isConfirm =
+                    (n.classList && n.classList.contains('wpforms-confirmation-container')) ||
+                    (n.querySelector && n.querySelector('.wpforms-confirmation-container'));
+
+                if (!isConfirm) continue;
+
+                var container = n.closest ? n.closest('.wpforms-container') : null;
+                var formId = container && container.id ? container.id.replace('wpforms-form-', '') : 'unknown';
+
+                dataLayer.push({
+                    event: 'wpformsConfirmation',
+                    wpform_id: formId,
+                    confirmation_text: (n.innerText || '').substring(0, 100)
+                });
+            }
+        });
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+
+})();
+</script>
